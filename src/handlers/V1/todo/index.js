@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
+const unirest = require('unirest')
 const repository = require('../../../repository/postgresql')
 const {
   baseResponse, errorResponse, paginationResponse, dynamicFilter
@@ -44,6 +45,29 @@ const show = async (req, res) => {
     const where = dynamicFilter(req.query, 'or')
     const result = await repository.todoPostgres.read(where)
     return paginationResponse(req, res, result)
+  } catch (error) {
+    return errorResponse(res, error)
+  }
+}
+
+// eslint-disable-next-line consistent-return
+const showNBA = async (req, res) => {
+  try {
+    let data = null
+    unirest('GET', 'https://v2.nba.api-sports.io/games?date=2022-12-11')
+      .headers({
+        'x-rapidapi-key': 'b8604c77b4bda3d1366fa24031e8800a',
+        'x-rapidapi-host': 'v2.nba.api-sports.io'
+      })
+      // eslint-disable-next-line prefer-arrow-callback
+      .end(function (res2) {
+        if (res2.error) throw new Error(res2.error)
+        data = JSON.parse(res2.raw_body)
+        console.log(`data222:${data}`)
+        return baseResponse(res, lang.__('get.success'), lang.__('success'), data)
+      })
+    // console.log(res)
+    // console.log(res.body)
   } catch (error) {
     return errorResponse(res, error)
   }
@@ -98,6 +122,7 @@ const hardDelete = async (req, res) => {
 module.exports = {
   store,
   show,
+  showNBA,
   showByParam,
   update,
   hardDelete,

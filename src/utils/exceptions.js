@@ -94,6 +94,7 @@ const baseResponse = (res, message, status, data) => {
     default:
       code = HTTP.OK
   }
+  console.log(`data baseRespose= ${data}`)
   res.status(code).json({
     message,
     status,

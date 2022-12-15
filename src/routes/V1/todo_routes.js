@@ -1,13 +1,14 @@
 const express = require('express')
 const {
-  store, show, showByParam, update, hardDelete
+  // eslint-disable-next-line no-unused-vars
+  store, show, showNBA, showByParam, update, hardDelete
 } = require('../../handlers/V1/todo')
 const { postValidation } = require('../../handlers/V1/todo/validation')
 
 const router = express.Router()
 
 router.post('/', postValidation, store)
-router.get('/', show)
+router.get('/', showNBA)
 router.get('/:id', showByParam)
 router.put('/:id', update)
 router.delete('/:id', hardDelete)
